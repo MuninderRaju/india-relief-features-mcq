@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>India: Relief Features Quiz</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        .quiz-container { max-width: 850px; margin: auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #1a73e8; border-bottom: 3px solid #1a73e8; padding-bottom: 10px; }
+        .language-switcher { text-align: center; margin-bottom: 25px; }
+        .lang-btn { padding: 10px 20px; cursor: pointer; border: 2px solid #1a73e8; background: white; color: #1a73e8; border-radius: 25px; font-weight: bold; transition: 0.3s; }
+        .lang-btn.active { background: #1a73e8; color: white; }
+        .question-block { margin-bottom: 30px; padding: 20px; border-radius: 10px; background: #f9f9f9; border-left: 6px solid #1a73e8; }
+        .options-list { list-style: none; padding: 0; }
+        .options-list li { margin: 12px 0; font-size: 17px; }
+        .submit-container { text-align: center; margin-top: 30px; }
+        .submit-btn { padding: 15px 40px; background: #28a745; color: white; border: none; border-radius: 30px; font-size: 20px; cursor: pointer; font-weight: bold; }
+        .result-msg { margin-top: 25px; font-size: 22px; text-align: center; font-weight: bold; color: #1a73e8; }
+        .review { margin-top: 10px; padding: 10px; border-radius: 5px; font-weight: 500; }
+        .correct { color: #155724; background: #d4edda; border: 1px solid #c3e6cb; }
+        .incorrect { color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; }
+        .passage { background: #eef6ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-style: italic; border: 1px dashed #1a73e8; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <h1>India: Relief Features</h1>
+
+    <div class="language-switcher">
+        <button class="lang-btn active" id="btn-en" onclick="switchLanguage('en')">English</button>
+        <button class="lang-btn" id="btn-te" onclick="switchLanguage('te')">తెలుగు</button>
+    </div>
+
+    <form id="quizForm">
+        <div id="quiz-content"></div>
+        <div class="submit-container">
+            <button type="button" class="submit-btn" onclick="checkAnswers()">Submit / సమర్పించు</button>
+        </div>
+    </form>
+
+    <div id="final-result" class="result-msg"></div>
+</div>
+
+<script>
+    const quizData = [
+        { q_en: "In Asia, India is located towards", q_te: "ఆసియాలో భారతదేశం ఎటువైపు ఉంది?", options_en: ["North", "South", "West", "East"], options_te: ["ఉత్తరం", "దక్షిణం", "పడమర", "తూర్పు"], ans: 1 },
+        { q_en: "The Famous valley and hill stations are present in the following Himalayan range", q_te: "ప్రసిద్ధ లోయలు మరియు వేసవి విడుదులు ఏ హిమాలయ శ్రేణిలో ఉన్నాయి?", options_en: ["Lesser Himalayas", "Greater Himalayas", "Outer Himalayas", "Purnachal"], options_te: ["నిమ్న హిమాలయాలు (హిమాచల్)", "ఉన్నత హిమాలయాలు (హిమాద్రి)", "బాహ్య హిమాలయాలు (శివాలిక్)", "పూర్వాంచల్"], ans: 0 },
+        { q_en: "This is a Perennial river", q_te: "ఇది ఒక జీవనది", options_en: ["Godavari", "Krishna", "Cauveri", "Ganga"], options_te: ["గోదావరి", "కృష్ణ", "కావేరి", "గంగా"], ans: 3 },
+        { q_en: "Outer Himalayas in Assom are known as", q_te: "అస్సాంలో బాహ్య హిమాలయాలను ఏమని పిలుస్తారు?", options_en: ["Khasi hills", "Cachar hills", "Mishmi", "Patkai hills"], options_te: ["ఖాశీ కొండలు", "కాచార్ కొండలు", "మిష్మి కొండలు", "పాట్కాయ్ కొండలు"], ans: 1 },
+        { q_en: "Marshy and Swampy region in Himalayas is called", q_te: "హిమాలయాలలోని చిత్తడి ప్రాంతాన్ని ఏమంటారు?", options_en: ["Bhabar", "Khadar", "Terai", "Khader"], options_te: ["భాబర్", "ఖాదర్", "టెరాయ్", "ఖాదర్"], ans: 2 },
+        { q_en: "This plateau is rich in mineral resources", q_te: "ఖనిజ వనరులు సమృద్ధిగా ఉన్న పీఠభూమి ఏది?", options_en: ["Deccan", "Malwa", "Chotanagpur", "Bundel Khand"], options_te: ["దక్కన్ పీఠభూమి", "మాల్వా పీఠభూమి", "ఛోటా నాగపూర్ పీఠభూమి", "బుందేల్ ఖండ్"], ans: 2 },
+        { q_en: "Highest peak in South India is", q_te: "దక్షిణ భారతదేశంలో ఎత్తైన శిఖరం ఏది?", options_en: ["Everest", "Anaimudi", "Aroma hills", "Dodabetta"], options_te: ["ఎవరెస్ట్", "అనైముడి", "అరోమా కొండలు", "దొడబెట్ట"], ans: 1 },
+        { q_en: "'Canara' coast is in this state", q_te: "'కెనరా' తీరం ఏ రాష్ట్రంలో ఉంది?", options_en: ["Andhra Pradesh", "Karnataka", "Kerala", "Maharashtra"], options_te: ["ఆంధ్రప్రదేశ్", "కర్ణాటక", "కేరళ", "మహారాష్ట్ర"], ans: 1 },
+        { q_en: "Southernmost tip of Indian main land is", q_te: "భారత ప్రధాన భూభాగం యొక్క దక్షిణ కొన ఏది?", options_en: ["Kanya Kumari", "Indira Point", "Kerala", "Tamilnadu"], options_te: ["కన్యాకుమారి", "ఇందిరా పాయింట్", "కేరళ", "తమిళనాడు"], ans: 0 },
+        { q_en: "India is located in this zone", q_te: "భారతదేశం ఏ మండలం/జోన్‌లో ఉంది?", options_en: ["Polar Zone", "Tropical Zone", "Temparate Zone", "Sub Polar Zone"], options_te: ["ధ్రువ మండలం", "ఉష్ణ మండలం", "సమశీతోష్ణ మండలం", "ఉప ధ్రువ మండలం"], ans: 1 },
+        { q_en: "The dunes are the valleys lying between", q_te: "డూన్ (Dunes) అనే లోయలు వేటి మధ్య ఉన్నాయి?", options_en: ["Himadri and Himachal ranges", "Greater Himalayas and Lesser Himalayas", "The Pir Panjal and Mahabharat ranges", "The Lesser Himalayas and Shivalik ranges"], options_te: ["హిమాద్రి మరియు హిమాచల్ శ్రేణులు", "ఉన్నత మరియు నిమ్న హిమాలయాలు", "పీర్ పంజాల్ మరియు మహాభారత్ శ్రేణులు", "నిమ్న హిమాలయాలు మరియు శివాలిక్ శ్రేణులు"], ans: 3 },
+        { q_en: "Which of the following is coral origin", q_te: "క్రింది వాటిలో పగడపు దీవులు ఏవి?", options_en: ["Andaman & Nicobar", "Lakshadweep", "Arkan Yana", "Narkondam"], options_te: ["అండమాన్ & నికోబార్", "లక్షద్వీప్", "అరకన్ యోమా", "నార్కొండం"], ans: 1 },
+        { q_en: "The result of the interaction of Himalayas rivers is the formation of", q_te: "హిమాలయ నదుల వల్ల ఏర్పడిన మైదానం ఏది?", options_en: ["Northern Plain", "Deccan Plateau", "East Coastal Plain", "West Coastal Plain"], options_te: ["ఉత్తర మైదానం", "దక్కన్ పీఠభూమి", "తూర్పు తీర మైదానం", "పశ్చిమ తీర మైదానం"], ans: 0 },
+        { q_en: "This is located on the Leeward side of Aravalis", q_te: "ఆరావళి పర్వతాలకు వర్షచ్ఛాయా ప్రాంతం (Leeward side) లో ఉన్నది ఏది?", options_en: ["Malwa Plateau", "Chota Nagpur Plateau", "Thar desert", "Vindhya range"], options_te: ["మాల్వా పీఠభూమి", "ఛోటా నాగపూర్ పీఠభూమి", "థార్ ఎడారి", "వింధ్య పర్వతాలు"], ans: 2 },
+        { isPassage: true, text_en: "Read the text: The Indian landmass displays great relief variations. The peninsular plateau is one of most ancient land blocks on the earth's surface.", text_te: "పాఠ్యం చదవండి: భారత భూభాగం గొప్ప ఉపరితల వైవిధ్యాలను ప్రదర్శిస్తుంది. ద్వీపకల్ప పీఠభూమి భూమిపై అత్యంత ప్రాచీనమైన భూభాగాలలో ఒకటి." },
+        { q_en: "Name the plateau that is mentioned in the above paragraph", q_te: "పై పేరాలో పేర్కొన్న పీఠభూమి పేరు ఏమిటి?", options_en: ["The Deccan plateau", "The Tibetan plateau", "The Pamir plateau", "All the above"], options_te: ["దక్కన్/ద్వీపకల్ప పీఠభూమి", "టిబెట్ పీఠభూమి", "పామీర్ పీఠభూమి", "పైవన్నీ"], ans: 0 },
+        { q_en: "The reason behind the name 'peninsula' is", q_te: "'ద్వీపకల్పం' అనే పేరు వెనుక ఉన్న కారణం ఏమిటి?", options_en: ["It is an ancient land block", "It has water on 3 sides and land one side", "It is a plateau", "None of the above"], options_te: ["ఇది పురాతన భూభాగం", "దీనికి మూడు వైపులా నీరు, ఒకవైపు భూమి ఉంటుంది", "ఇది ఒక పీఠభూమి", "పైవేవీ కావు"], ans: 1 }
+    ];
+
+    let currentLang = 'en';
+
+    function switchLanguage(lang) {
+        currentLang = lang;
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.getElementById('btn-te').classList.toggle('active', lang === 'te');
+        renderQuiz();
+    }
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-content');
+        container.innerHTML = '';
+        let qCount = 1;
+
+        quizData.forEach((item, index) => {
+            if (item.isPassage) {
+                const passageDiv = document.createElement('div');
+                passageDiv.className = 'passage';
+                passageDiv.innerText = currentLang === 'en' ? item.text_en : item.text_te;
+                container.appendChild(passageDiv);
+            } else {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-block';
+                const questionText = currentLang === 'en' ? item.q_en : item.q_te;
+                qDiv.innerHTML = `<p><strong>${qCount}. ${questionText}</strong></p>`;
+                
+                const ul = document.createElement('ul');
+                ul.className = 'options-list';
+                
+                const currentOptions = currentLang === 'en' ? item.options_en : item.options_te;
+                currentOptions.forEach((opt, optIndex) => {
+                    ul.innerHTML += `
+                        <li>
+                            <label>
+                                <input type="radio" name="q${index}" value="${optIndex}"> ${opt}
+                            </label>
+                        </li>`;
+                });
+                
+                qDiv.appendChild(ul);
+                qDiv.innerHTML += `<div id="review-${index}" class="review"></div>`;
+                container.appendChild(qDiv);
+                qCount++;
+            }
+        });
+    }
+
+    function checkAnswers() {
+        let score = 0;
+        let totalQuestions = 0;
+
+        quizData.forEach((item, index) => {
+            if (item.isPassage) return;
+            totalQuestions++;
+            const selected = document.querySelector(`input[name="q${index}"]:checked`);
+            const reviewDiv = document.getElementById(`review-${index}`);
+            
+            if (selected) {
+                const userAns = parseInt(selected.value);
+                if (userAns === item.ans) {
+                    score++;
+                    reviewDiv.innerHTML = "✅ Correct! / సరైనది!";
+                    reviewDiv.className = "review correct";
+                } else {
+                    const correctText = currentLang === 'en' ? item.options_en[item.ans] : item.options_te[item.ans];
+                    reviewDiv.innerHTML = `❌ Wrong! Correct: ${correctText}`;
+                    reviewDiv.className = "review incorrect";
+                }
+            } else {
+                reviewDiv.innerHTML = "⚠️ Not answered / సమాధానం గుర్తించలేదు";
+                reviewDiv.className = "review incorrect";
+            }
+        });
+
+        document.getElementById('final-result').innerHTML = 
+            `Your Total Score: ${score} / ${totalQuestions} <br> 
+            (మీ మొత్తం స్కోరు: ${score} / ${totalQuestions})`;
+        
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    renderQuiz();
+</script>
+
+</body>
+</html>
