@@ -21,6 +21,20 @@
         .correct { color: #155724; background: #d4edda; border: 1px solid #c3e6cb; }
         .incorrect { color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; }
         .passage { background: #eef6ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; font-style: italic; border: 1px dashed #1a73e8; }
+        
+        /* Updated Footer Style */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            text-align: center;
+            border-top: 2px solid #1a73e8;
+            font-size: 16px;
+            color: #444;
+            line-height: 1.6;
+            background-color: #f8f9fa;
+            border-radius: 0 0 15px 15px;
+        }
+        .footer-credit { font-weight: bold; color: #1a73e8; }
     </style>
 </head>
 <body>
@@ -41,6 +55,13 @@
     </form>
 
     <div id="final-result" class="result-msg"></div>
+
+    <footer>
+        <div class="footer-credit">Prepared by: A. Muninder Raju</div>
+        GHM Chincholi B <br>
+        Dist: Nirmal, Telangana <br>
+        Email: <a href="mailto:muninderadluri@gmail.com">muninderadluri@gmail.com</a>
+    </footer>
 </div>
 
 <script>
@@ -141,8 +162,6 @@
         document.getElementById('final-result').innerHTML = 
             `Your Total Score: ${score} / ${totalQuestions} <br> 
             (మీ మొత్తం స్కోరు: ${score} / ${totalQuestions})`;
-        
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     renderQuiz();
